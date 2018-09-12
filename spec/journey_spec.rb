@@ -15,6 +15,7 @@ describe Journey do
       before(:each) do
         subject.touch_in(entry_station)
       end
+      
       it 'starts a journey' do
         expect(subject).to be_in_journey
       end
@@ -25,7 +26,6 @@ describe Journey do
         expect(subject.entry_station.name).to eq station_name
       end
     end
-
   end
 
   describe '#touch_out' do
@@ -57,16 +57,18 @@ describe Journey do
         expect(subject.fare).to eq Journey::MINIMUM_FARE
       end
     end
+
     context 'Penalty' do
       it 'returns penalty fare if no journey recorded' do
         expect(subject.fare).to eq Journey::PENALTY_FARE
       end
+
       it 'returns penalty fare if no entry station' do
         subject.touch_out(exit_station)
         expect(subject.fare).to eq Journey::PENALTY_FARE
       end
+
       it 'returns penalty fare if no exit station' do
-        subject.touch_in(nil)
         subject.touch_out(exit_station)
         expect(subject.fare).to eq Journey::PENALTY_FARE
       end

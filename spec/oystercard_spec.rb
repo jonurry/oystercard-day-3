@@ -35,7 +35,7 @@ describe Oystercard do
 
   describe '#touch_out' do
     before(:each) do
-      @fare = 1 # Oystercard::MINIMUM_FARE
+      @fare = 1
       subject.top_up(@fare)
       subject.touch_in(entry_station)
     end
@@ -44,5 +44,4 @@ describe Oystercard do
       expect{ subject.touch_out("Hammersmith") }.to change{ subject.balance }.by(-@fare)
     end
   end
-
 end
