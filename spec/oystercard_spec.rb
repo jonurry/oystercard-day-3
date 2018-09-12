@@ -53,18 +53,24 @@ describe Oystercard do
       @fare = Oystercard::MINIMUM_FARE
       subject.top_up(@fare)
       subject.touch_in(station)
+      @exit_station = "Hammersmith"
     end
 
     it 'ends a journey' do
-      subject.touch_out
+      subject.touch_out(@exit_station)
       expect(subject).not_to be_in_journey
     end
     it 'charges minimum fare' do
-      expect{ subject.touch_out }.to change{ subject.balance }.by(-@fare)
+      expect{ subject.touch_out(@exit_station) }.to change{ subject.balance }.by(-@fare)
     end
 
     it 'forgets the entry station' do
-      expect{ subject.touch_out }.to change{ subject.entry_station }.to be_nil
+      expect{ subject.touch_out(@exit_station) }.to change{ subject.entry_station }.to be_nil
+    end
+
+    it 'records the entry and exit stations in the journey history' do
+      subject.touch_out(@exit_station)
+      expect(subject.journeys).to eq [{ entry_station: station, exit_station: @exit_station}]
     end
   end
 end
