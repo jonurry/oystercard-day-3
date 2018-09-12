@@ -2,6 +2,7 @@ require 'journey'
 
 describe Journey do
   let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
 
   describe 'Initialise' do
     it 'has no journeys recorded when initialised' do
@@ -45,6 +46,30 @@ describe Journey do
     it 'records the entry and exit stations in the journey history' do
       subject.touch_out(@exit_station)
       expect(subject.journey_history).to eq [{ entry_station: entry_station, exit_station: @exit_station}]
+    end
+  end
+
+  describe '#fare' do
+    context "No Penalty" do
+      it 'returns the minimum fare in normal conditons' do
+        subject.touch_in(entry_station)
+        subject.touch_out(exit_station)
+        expect(subject.fare).to eq Journey::MINIMUM_FARE
+      end
+    end
+    context 'Penalty' do
+      it 'returns penalty fare if no journey recorded' do
+        expect(subject.fare).to eq Journey::PENALTY_FARE
+      end
+      it 'returns penalty fare if no entry station' do
+        subject.touch_out(exit_station)
+        expect(subject.fare).to eq Journey::PENALTY_FARE
+      end
+      it 'returns penalty fare if no exit station' do
+        subject.touch_in(nil)
+        subject.touch_out(exit_station)
+        expect(subject.fare).to eq Journey::PENALTY_FARE
+      end
     end
   end
 

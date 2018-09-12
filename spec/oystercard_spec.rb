@@ -1,4 +1,5 @@
 require 'oystercard'
+
 describe Oystercard do
   let(:entry_station) { double :station }
   let(:exit_station) { double :station }
@@ -34,21 +35,13 @@ describe Oystercard do
 
   describe '#touch_out' do
     before(:each) do
-      @fare = Oystercard::MINIMUM_FARE
+      @fare = 1 # Oystercard::MINIMUM_FARE
       subject.top_up(@fare)
       subject.touch_in(entry_station)
     end
 
     it 'charges minimum fare' do
       expect{ subject.touch_out("Hammersmith") }.to change{ subject.balance }.by(-@fare)
-    end
-  end
-
-  describe '#fare' do
-    context "No Penalty" do
-      it 'returns the minimum fare in normal conditons' do
-        expect(subject.fare).to eq Oystercard::MINIMUM_FARE
-      end
     end
   end
 
